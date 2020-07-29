@@ -26,6 +26,8 @@ class CalculatorViewController: UIViewController {
     }
     
     @IBAction func stepperValueChanged(_ sender: UIStepper) {
+        print(sender.value)
+        splitNumberLabel.text = "\(Int(sender.value))"
         
     }
     
@@ -53,6 +55,7 @@ class CalculatorViewController: UIViewController {
         //Divide the percent expressed out of 100 into a decimal e.g. 10 becomes 0.1
         let tip: Double = buttonTitleAsANumber / 100
         print(tip)
+        print(splitNumberLabel!.text!)
     }
 }
 
