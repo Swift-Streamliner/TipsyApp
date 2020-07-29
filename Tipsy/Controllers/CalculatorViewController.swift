@@ -17,12 +17,12 @@ class CalculatorViewController: UIViewController {
     @IBOutlet weak var splitNumberLabel: UILabel!
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-    }
 
     @IBAction func tipChanged(_ sender: UIButton) {
+        zeroPctButton.isSelected = false
+        tenPctButton.isSelected = false
+        twentyPctButton.isSelected = false
+        sender.isSelected = true
     }
     
     @IBAction func stepperValueChanged(_ sender: UIStepper) {
@@ -30,7 +30,29 @@ class CalculatorViewController: UIViewController {
     }
     
     @IBAction func calculatePressed(_ sender: UIButton) {
-        
+        var tipInPerc = "0%"
+        if zeroPctButton.isSelected {
+            if let buttonTitle = zeroPctButton?.titleLabel?.text {
+                tipInPerc = buttonTitle
+            }
+        }
+        else if tenPctButton.isSelected {
+            if let buttonTitle = tenPctButton?.titleLabel?.text {
+                tipInPerc = buttonTitle
+            }
+        }
+        else if twentyPctButton.isSelected {
+            if let buttonTitle = twentyPctButton?.titleLabel?.text {
+                tipInPerc = buttonTitle
+            }
+        }
+        //Remove the last character (%) from the title then turn it back into a String.
+        let buttonTitleMinusPercentSign =  String(tipInPerc.dropLast())
+        //Turn the String into a Double.
+        let buttonTitleAsANumber = Double(buttonTitleMinusPercentSign)!
+        //Divide the percent expressed out of 100 into a decimal e.g. 10 becomes 0.1
+        let tip: Double = buttonTitleAsANumber / 100
+        print(tip)
     }
 }
 
