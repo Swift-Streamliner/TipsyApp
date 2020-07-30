@@ -16,7 +16,9 @@ class CalculatorViewController: UIViewController {
     @IBOutlet weak var twentyPctButton: UIButton!
     @IBOutlet weak var splitNumberLabel: UILabel!
     
-    
+    var tip: Double = 0.0
+    var numberOfPeople = 2
+    var tipPercentage: String = "0%"
 
     @IBAction func tipChanged(_ sender: UIButton) {
         zeroPctButton.isSelected = false
@@ -28,34 +30,47 @@ class CalculatorViewController: UIViewController {
     @IBAction func stepperValueChanged(_ sender: UIStepper) {
         print(sender.value)
         splitNumberLabel.text = "\(Int(sender.value))"
+        numberOfPeople = Int(sender.value)
         
     }
     
     @IBAction func calculatePressed(_ sender: UIButton) {
-        var tipInPerc = "0%"
         if zeroPctButton.isSelected {
             if let buttonTitle = zeroPctButton?.titleLabel?.text {
-                tipInPerc = buttonTitle
+                tipPercentage = buttonTitle
             }
         }
         else if tenPctButton.isSelected {
             if let buttonTitle = tenPctButton?.titleLabel?.text {
-                tipInPerc = buttonTitle
+                tipPercentage = buttonTitle
             }
         }
         else if twentyPctButton.isSelected {
             if let buttonTitle = twentyPctButton?.titleLabel?.text {
-                tipInPerc = buttonTitle
+                tipPercentage = buttonTitle
             }
         }
         //Remove the last character (%) from the title then turn it back into a String.
-        let buttonTitleMinusPercentSign =  String(tipInPerc.dropLast())
+        let buttonTitleMinusPercentSign =  String(tipPercentage.dropLast())
         //Turn the String into a Double.
         let buttonTitleAsANumber = Double(buttonTitleMinusPercentSign)!
         //Divide the percent expressed out of 100 into a decimal e.g. 10 becomes 0.1
-        let tip: Double = buttonTitleAsANumber / 100
-        print(tip)
-        print(splitNumberLabel!.text!)
+        if let cost = Double(bilTextField.text!) {
+            tip = cost * (buttonTitleAsANumber / 100) / Double(numberOfPeople)
+            tip = (tip * 100).rounded() / 100
+            performSegue(withIdentifier: "resultSegue", sender: self)
+        } else {
+            print("invalid input")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "resultSegue" {
+            let destination = segue.destination as! ResultsViewController
+            destination.numberOfPeople = numberOfPeople
+            destination.tipPercentage = tipPercentage
+            destination.tip = tip
+        }
     }
 }
 
